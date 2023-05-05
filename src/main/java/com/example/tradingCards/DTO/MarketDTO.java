@@ -1,24 +1,21 @@
 package com.example.tradingCards.DTO;
 
 import com.example.tradingCards.model.Card;
+import com.example.tradingCards.model.Market;
+import com.example.tradingCards.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
+public class MarketDTO {
 
-public class PackDTO {
-
-    private Long Id;
-    private String name;
-    private String description;
+    private long id;
+    private Long ownerId;
+    private CardDTO card;
     private int price;
-    private int size;
-    private List<CardDTO> cardList;
 
 
 }

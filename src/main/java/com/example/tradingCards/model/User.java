@@ -16,7 +16,7 @@ import java.util.List;
 
 
 
-public class User {
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +24,9 @@ public class User {
     private String username;
     private String name;
     private String password;
+    private String email;
     private int balance;
+
 
     public enum Type {
         REGULAR,
@@ -34,18 +36,23 @@ public class User {
     private Type role;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "card_owner",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_card"))
     List<Card> ownedCards = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    List<Market> listing;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    List<Market> listings;
 
     public void addToOwnedCards(Card card) {
         ownedCards.add(card);
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return Long.compare(this.getId(), o.getId());
     }
 
 }

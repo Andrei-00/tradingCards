@@ -19,6 +19,7 @@ public class CardMapper {
         cardDTO.setType(card.getType());
         cardDTO.setOverall(card.getOverall());
 
+
         return cardDTO;
     }
 

@@ -4,6 +4,7 @@ import com.example.tradingCards.DTO.UserDTO;
 import com.example.tradingCards.model.*;
 import com.example.tradingCards.repository.*;
 import com.example.tradingCards.service.CardService;
+import com.example.tradingCards.service.PackService;
 import com.example.tradingCards.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -40,7 +41,8 @@ public class TradingCardsApplication {
 	@Bean
 	CommandLineRunner init(CardRepository cardRepository, UserRepository userRepository, MarketRepository marketRepository,
 						   PackRepository packRepository, PlayerRepository playerRepository,
-						   UserService userService, CardService cardService){
+						   UserService userService, CardService cardService,
+						   PackService packService){
 		return args -> {
 
 			//User login
@@ -63,12 +65,20 @@ public class TradingCardsApplication {
 			admin.setName("Admin1");
 			admin.setPassword("1234");
 			admin.setRole(User.Type.ADMIN);
-			admin.setBalance(10);
+			admin.setBalance(100);
 			userRepository.save(admin);
+
+			User user1 = new User();
+			user1.setUsername("user1");
+			user1.setName("User1");
+			user1.setPassword("");
+			user1.setRole(User.Type.REGULAR);
+			user1.setBalance(100);
+			userRepository.save(user1);
 
 			UserDTO adminDTO = userService.login("admin1", "1234");
 			if (adminDTO != null){
-				userService.createUser(admin.getRole(), "admin","User2", "aaa", User.Type.REGULAR);
+				userService.createUser(admin.getId(), "admin","User2", "aaa", "", User.Type.REGULAR);
 				userService.login("admin", "aaa");
 
 
@@ -97,16 +107,33 @@ public class TradingCardsApplication {
 			card1.setOverall(74);
 			cardRepository.save(card1);
 
+			List<Card> cardList = new ArrayList<>();
+			cardList.add(card1);
+			cardList.add(card);
+			for (int i = 2; i < 10; i++){
+				Card newCard = new Card();
+				String type = "Silver" + i;
+				newCard.setType(type);
+				newCard.setPosition("GK");
+				newCard.setMaxPrice(5000);
+				newCard.setMinPrice(10);
+				newCard.setChance(1.0/i);
+				newCard.setOverall(74);
+				cardRepository.save(newCard);
+				cardList.add(newCard);
+			}
+
 			//Packs
 			Pack pack= new Pack();
-			pack.setPrice(5000);
+			pack.setPrice(5);
 			pack.setName("Regular pack");
 			pack.setDescription("Desc");
-			List<Card> cardList = new ArrayList<>();
-			cardList.add(card);
-			cardList.add(card1);
-			pack.setCardList(cardList);
+			pack.setSize(5);
+
+			pack.getCardList().addAll(cardList);
+
 			packRepository.save(pack);
+
 
 			Pack pack1 = new Pack();
 
@@ -117,8 +144,16 @@ public class TradingCardsApplication {
 			System.out.println("Card packList: " + card.getPackList());
 			System.out.println("Pack cardList: " + pack.getCardList());
 			admin.getOwnedCards().addAll(Arrays.asList(card, card1));
+			userRepository.save(admin);
 			System.out.println("Admin: " + admin);
 
+			packService.selectCards(pack.getId());
+
+			//System.out.println("Before buying the pack: " + admin.getOwnedCards());
+			userService.buyPack(2l, 1l);
+			//System.out.println("After buying the pack: " + admin.getOwnedCards());
+
+			//userService.createListing(2l, 2l, 100);
 
 		};
 	}

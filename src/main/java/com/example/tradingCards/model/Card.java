@@ -46,7 +46,7 @@ public class Card {
     @ManyToOne(cascade = CascadeType.MERGE)
     private Player player;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Market> listing;
 
     public void addToPackList(Pack pack){
@@ -67,7 +67,7 @@ public class Card {
                 ", minPrice=" + minPrice +
                 ", maxPrice=" + maxPrice +
                 ", chance=" + chance +
-                ", owners=" + owners +
+                //", owners=" + owners +
                 //", packList=" + packList +
                 ", player=" + player +
                 ", listing=" + listing +
