@@ -21,6 +21,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String color;
     private String type;
     private String position;
 

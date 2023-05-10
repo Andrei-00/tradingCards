@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,37 @@ public class TradingCardsApplication {
 		} else {
 			System.out.println("Unsuccessful login!");
 		}
+	}
+
+	void playerCardInit(){
+
+		String line = "";
+		String splitBy = ",";
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new FileReader("input.csv"));
+
+			while ((line = bufferedReader.readLine()) != null){
+				String [] player = line.split(splitBy);
+				Player newPlayer = new Player();
+				Card newCard = new Card();
+				newPlayer.setName(player[1]);
+				newPlayer.setAge(Integer.parseInt(player[10]));
+				newPlayer.setNationality(player[9]);
+				newPlayer.setLeague(player[7]);
+				newPlayer.setTeam(player[8]);
+				newCard.setColor(player[6]);
+				newCard.setType(player[11]);
+				newCard.setPosition(player[2]);
+				newCard.setOverall(Integer.parseInt(player[5]));
+
+			}
+
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 	@Bean
